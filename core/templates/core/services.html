@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Our Services - Ntatemoholo Seromo</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+</head>
+
+<body>
+
+<nav>
+    <h2>Sangoma Wisdom</h2>
+    <div>
+        <a href="/">Home</a>
+        <a href="/services/">Services</a>
+        <a href="/book/">Book</a>
+        <a href="/review/">Reviews</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <h1>Our Spiritual Services</h1>
+    <p>Guidance, Healing, and Connection to Your Ancestors</p>
+</section>
+
+<section>
+    <div class="grid">
+        {% for service in services %}
+            <div class="card">
+                <h3>{{ service.name }}</h3>
+                <p>{{ service.description }}</p>
+
+                <a href="/book/" class="button-link">Book This Service</a>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+</body>
+</html>

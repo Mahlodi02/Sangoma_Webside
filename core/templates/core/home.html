@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ntatemoholo Seromo</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <h2>Sangoma Wisdom</h2>
+    <!-- <div>
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/book/">Book</a>
+        <a href="/services/">Services</a>
+        <a href="/review/">Reviews</a>
+        <a href="/contact/">Contact</a>
+        <a href="/location/">Location</a>
+    </div> -->
+    <div>
+    <a href="/">Home</a>
+    <a href="/about/">About</a>
+    <a href="/blog/">Blog</a>
+    <a href="/services/">Services</a>
+    <a href="/contact/">Contact</a>
+
+    {% if user.is_authenticated %}
+        <a href="/logout/">Logout</a>
+    {% else %}
+        <a href="/login/" class="cta-button">Sign In</a>
+    {% endif %}
+</div>
+</nav>
+
+<!-- HERO -->
+<!-- <section class="hero">
+    <h1>Welcome to Ntatemoholo Seromo</h1>
+    <p>{{ daily_message }}</p>
+</section> -->
+
+<!-- <section class="hero">
+    <div class="overlay">
+        <h1>Ntatemoholo Seromo</h1>
+        <p>{{ daily_message }}</p>
+
+        <div class="hero-buttons">
+            <a href="/book/" class="button-link">Book Session</a>
+            <a href="/services/" class="button-link">Explore Services</a>
+        </div>
+    </div>
+</section> -->
+<section class="hero">
+
+    <div class="overlay-content">
+
+        <h1>Daily Encouragement &<br>Spiritual Guidance</h1>
+
+        <p class="subtext">
+            Find hope, healing, and wisdom for each new day
+        </p>
+
+        <div class="message-box">
+            <p>{{ daily_message }}</p>
+        </div>
+
+        <a href="/book/" class="cta-button">
+            Get Today’s Encouragement
+        </a>
+
+        <p class="small-text">
+            Register or sign in to receive daily encouragement messages
+        </p>
+
+    </div>
+
+</section>
+
+<!-- SERVICES -->
+<!-- <section>
+    <h2>Our Spiritual Services</h2>
+    <div class="grid">
+        {% for service in services %}
+            <div class="card">
+                <h3>{{ service.name }}</h3>
+                <p>{{ service.description }}</p>
+            </div>
+        {% endfor %}
+    </div>
+</section> -->
+
+<!-- REVIEWS -->
+<section>
+    <h2>Client Reviews</h2>
+    <div class="grid">
+        {% for review in reviews %}
+            <div class="card">
+                <strong>{{ review.name }}</strong>
+                <p>
+                {% for i in "12345" %}
+                    {% if forloop.counter <= review.rating %}
+                        ⭐
+                    {% else %}
+                        ☆
+                    {% endif %}
+                {% endfor %}
+                </p>
+                <p>{{ review.message }}</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- ABOUT PREVIEW -->
+<!-- <section>
+    <h2>About Ntatemoholo Seromo</h2>
+    <p>{{ about_intro }}</p>
+    <a href="/about/" class="button-link">Read More</a>
+</section> -->
+
+<!-- CONTACT PREVIEW -->
+<!-- <section>
+    <h2>Contact</h2>
+    <p>Email: {{ contact_email }}</p>
+    <p>Phone: {{ contact_phone }}</p>
+    <a href="/contact/" class="button-link">Contact Us</a>
+</section> -->
+
+<!-- FOOTER -->
+<footer>
+    <p>&copy; 2026 Ntatemoholo Seromo | All Rights Reserved</p>
+</footer>
+
+</body>
+</html>

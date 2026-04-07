@@ -1,0 +1,10 @@
+<section class="contact">
+    <h1>Contact Us</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label>Name:</label>{{ form.name }}
+        <label>Email:</label>{{ form.email }}
+        <label>Message:</label>{{ form.message }}
+        <button type="submit">Send Message</button>
+    </form>
+</section>
