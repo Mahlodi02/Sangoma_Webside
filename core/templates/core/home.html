@@ -1,136 +1,466 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Ntatemoholo Seromo</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ntatemoholo Seromo | Sangoma Wisdom & Spiritual Healing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'core/style.css' %}">
 </head>
 <body>
 
-<!-- NAVBAR -->
-<nav>
-    <h2>Sangoma Wisdom</h2>
-    <!-- <div>
-        <a href="/">Home</a>
-        <a href="/about/">About</a>
-        <a href="/book/">Book</a>
-        <a href="/services/">Services</a>
-        <a href="/review/">Reviews</a>
-        <a href="/contact/">Contact</a>
-        <a href="/location/">Location</a>
-    </div> -->
-    <div>
-    <a href="/">Home</a>
-    <a href="/about/">About</a>
-    <a href="/blog/">Blog</a>
-    <a href="/services/">Services</a>
-    <a href="/contact/">Contact</a>
-
-    {% if user.is_authenticated %}
-        <a href="/logout/">Logout</a>
-    {% else %}
-        <a href="/login/" class="cta-button">Sign In</a>
-    {% endif %}
+<!-- BACKGROUND SLIDESHOW -->
+<div id="bg-canvas">
+  <div class="slide active" style="background-image:url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1455156218388-5e61b526818b?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1499244571948-7ccddb3583f1?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1530569673472-307dc017a82d?w=1920&q=80')"></div>
 </div>
-</nav>
+<div id="bg-label">Mountain</div>
 
-<!-- HERO -->
-<!-- <section class="hero">
-    <h1>Welcome to Ntatemoholo Seromo</h1>
-    <p>{{ daily_message }}</p>
-</section> -->
+<!-- PAGE -->
+<div id="page">
 
-<!-- <section class="hero">
-    <div class="overlay">
-        <h1>Ntatemoholo Seromo</h1>
-        <p>{{ daily_message }}</p>
-
-        <div class="hero-buttons">
-            <a href="/book/" class="button-link">Book Session</a>
-            <a href="/services/" class="button-link">Explore Services</a>
-        </div>
+  <!-- ═══ NAVBAR ═══════════════════════════════════════════════ -->
+  <nav id="navbar">
+    <a href="{% url 'home' %}" class="nav-brand">
+      <div class="symbol">☽</div>
+      <span>Ntatemoholo Seromo</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="{% url 'services' %}">Services</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+      <li><a href="#contact">Contact</a></li>
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'logout' %}" class="btn-outline">Sign Out</a></li>
+      {% else %}
+        <li><a href="#" class="btn-outline" onclick="openModal('signin')">Sign In</a></li>
+        <li><a href="#" class="btn-filled" onclick="openModal('register')">Register</a></li>
+      {% endif %}
+    </ul>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
     </div>
-</section> -->
-<section class="hero">
+  </nav>
 
-    <div class="overlay-content">
+  <!-- ═══ HERO ═════════════════════════════════════════════════ -->
+  <section id="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Ancestral Wisdom · Spiritual Healing</div>
+      <h1 class="hero-title">
+        Sacred Guidance for<br>
+        <em>Your Spiritual Journey</em>
+      </h1>
+      <p class="hero-sub">
+        Connect with your ancestors. Find healing, clarity, and purpose<br>
+        through the ancient wisdom of the Sangoma tradition.
+      </p>
 
-        <h1>Daily Encouragement &<br>Spiritual Guidance</h1>
+      <div class="daily-card">
+        <div class="daily-label">✦ Today's Sacred Message</div>
+        <div class="daily-msg" id="dailyMsg">{{ daily_message }}</div>
+      </div>
 
-        <p class="subtext">
-            Find hope, healing, and wisdom for each new day
-        </p>
-
-        <div class="message-box">
-            <p>{{ daily_message }}</p>
-        </div>
-
-        <a href="/book/" class="cta-button">
-            Get Today’s Encouragement
-        </a>
-
-        <p class="small-text">
-            Register or sign in to receive daily encouragement messages
-        </p>
-
+      <div class="hero-actions">
+        <a href="#" class="btn-primary" onclick="openModal('register')">Begin Your Journey</a>
+        <a href="{% url 'services' %}" class="btn-ghost">Explore Services</a>
+      </div>
     </div>
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
 
-</section>
+  <!-- ═══ ABOUT ═════════════════════════════════════════════════ -->
+  <section id="about" class="section section-dark">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-eyebrow">✦ Our Story</div>
+        <h2 class="section-title">Who Is <em>Ntatemoholo Seromo</em></h2>
+        <div class="divider"></div>
+      </div>
+      <div class="about-grid reveal">
+        <div class="about-symbol">
+          <svg width="280" height="280" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="140" cy="140" r="120" stroke="rgba(201,168,76,0.2)" stroke-width="0.8"/>
+            <circle cx="140" cy="140" r="90" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+            <circle cx="140" cy="140" r="60" stroke="rgba(201,168,76,0.25)" stroke-width="0.8"/>
+            <g style="animation:spinSlow 40s linear infinite;transform-origin:140px 140px">
+              <circle cx="140" cy="20" r="5" fill="rgba(201,168,76,0.6)"/>
+              <circle cx="220" cy="60" r="3" fill="rgba(201,168,76,0.35)"/>
+              <circle cx="260" cy="140" r="5" fill="rgba(201,168,76,0.6)"/>
+              <circle cx="220" cy="220" r="3" fill="rgba(201,168,76,0.35)"/>
+              <circle cx="140" cy="260" r="5" fill="rgba(201,168,76,0.6)"/>
+              <circle cx="60" cy="220" r="3" fill="rgba(201,168,76,0.35)"/>
+              <circle cx="20" cy="140" r="5" fill="rgba(201,168,76,0.6)"/>
+              <circle cx="60" cy="60" r="3" fill="rgba(201,168,76,0.35)"/>
+            </g>
+            <path d="M140 80 L148 120 L188 112 L156 140 L188 168 L148 160 L140 200 L132 160 L92 168 L124 140 L92 112 L132 120 Z"
+              fill="rgba(201,168,76,0.12)" stroke="rgba(201,168,76,0.5)" stroke-width="0.8"/>
+            <circle cx="140" cy="140" r="12" fill="rgba(201,168,76,0.15)" stroke="rgba(201,168,76,0.6)" stroke-width="1"/>
+            <text x="140" y="145" text-anchor="middle" font-size="14" fill="rgba(201,168,76,0.9)" font-family="serif">☽</text>
+          </svg>
+        </div>
+        <div class="about-text">
+          <h3>Rooted in Ancestral Tradition</h3>
+          <p>Ntatemoholo Seromo is a revered Sangoma healer with deep roots in Southern African spiritual tradition. A Sangoma is a traditional healer who acts as an intermediary between the living and the ancestral world — diagnosing illness, offering guidance, and facilitating healing ceremonies.</p>
+          <p>Through years of training under master healers, Ntatemoholo Seromo carries forward the sacred knowledge of bone throwing, herbal medicine, dream interpretation, and ancestral communication to bring balance and clarity to those in need.</p>
+          <div class="about-stat-row">
+            <div class="about-stat"><strong>20+</strong><span>Years of Practice</span></div>
+            <div class="about-stat"><strong>1,200+</strong><span>Souls Guided</span></div>
+            <div class="about-stat"><strong>∞</strong><span>Ancestral Lineage</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- SERVICES -->
-<!-- <section>
-    <h2>Our Spiritual Services</h2>
-    <div class="grid">
+  <!-- ═══ SERVICES PREVIEW ══════════════════════════════════════ -->
+  <section id="services-preview" class="section section-mid">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-eyebrow">✦ What We Offer</div>
+        <h2 class="section-title">Sacred <em>Spiritual Services</em></h2>
+        <div class="divider"></div>
+      </div>
+      <div class="services-grid">
         {% for service in services %}
-            <div class="card">
-                <h3>{{ service.name }}</h3>
-                <p>{{ service.description }}</p>
-            </div>
+        <div class="service-card reveal">
+          <div class="service-icon">🌿</div>
+          <h3>{{ service.name }}</h3>
+          <p>{{ service.description }}</p>
+        </div>
+        {% empty %}
+        <!-- Default cards shown when no services are in the database yet -->
+        <div class="service-card reveal">
+          <div class="service-icon">🦴</div>
+          <h3>Bone Throwing (Hakata)</h3>
+          <p>Ancient divination using sacred bones to reveal messages from your ancestors, uncovering hidden truths and the path forward in your life.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon">🌿</div>
+          <h3>Herbal Medicine</h3>
+          <p>Traditional plant-based healing remedies crafted from indigenous South African herbs to cleanse the body, mind and spirit of imbalances.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon">🌙</div>
+          <h3>Dream Interpretation</h3>
+          <p>Your dreams are messages from the ancestors. Receive deep spiritual insight into recurring visions and symbols that guide your waking life.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon">🔥</div>
+          <h3>Ukuthwasa Ceremony</h3>
+          <p>Sacred initiation and spiritual awakening ceremonies to acknowledge and honour the calling from your ancestral spirits (Amadlozi).</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon">💧</div>
+          <h3>Spiritual Cleansing</h3>
+          <p>Ritual cleansing with sacred herbs, water, and smoke to remove negative energy, break spiritual blockages and restore inner harmony.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon">🫀</div>
+          <h3>Ancestor Connection</h3>
+          <p>Guided sessions to reconnect with your ancestral lineage, honour those who came before, and receive their wisdom and protection.</p>
+        </div>
         {% endfor %}
+      </div>
+      <div style="text-align:center;margin-top:48px;" class="reveal">
+        <a href="{% url 'services' %}" class="btn-primary">View All Services</a>
+      </div>
     </div>
-</section> -->
+  </section>
 
-<!-- REVIEWS -->
-<section>
-    <h2>Client Reviews</h2>
-    <div class="grid">
+  <!-- ═══ REVIEWS ═══════════════════════════════════════════════ -->
+  <section id="reviews" class="section section-dark">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-eyebrow">✦ Testimonials</div>
+        <h2 class="section-title">Words from <em>Those Who Were Healed</em></h2>
+        <div class="divider"></div>
+      </div>
+      <div class="reviews-grid">
         {% for review in reviews %}
-            <div class="card">
-                <strong>{{ review.name }}</strong>
-                <p>
-                {% for i in "12345" %}
-                    {% if forloop.counter <= review.rating %}
-                        ⭐
-                    {% else %}
-                        ☆
-                    {% endif %}
-                {% endfor %}
-                </p>
-                <p>{{ review.message }}</p>
+        <div class="review-card reveal">
+          <div class="review-stars">
+            {% for i in "12345" %}
+              {% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}
+            {% endfor %}
+          </div>
+          <p class="review-text">{{ review.message }}</p>
+          <div class="review-author">
+            <div class="review-avatar">{{ review.name|slice:":2"|upper }}</div>
+            <div>
+              <div class="review-name">{{ review.name }}</div>
+              <div class="review-date">{{ review.created_at|date:"F Y" }}</div>
             </div>
+          </div>
+        </div>
+        {% empty %}
+        <!-- Default reviews shown when database is empty -->
+        <div class="review-card reveal">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">I came broken and confused. After my session with Ntatemoholo Seromo I felt the weight lift from my chest. My ancestors spoke clearly through the bones — it changed my life completely.</p>
+          <div class="review-author">
+            <div class="review-avatar">TM</div>
+            <div>
+              <div class="review-name">Thabo Mokoena</div>
+              <div class="review-date">Johannesburg · March 2026</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-card reveal">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">The herbal cleansing and spiritual reading revealed things nobody could have known. I finally understood why I had been struggling for so long. I am at peace now.</p>
+          <div class="review-author">
+            <div class="review-avatar">NZ</div>
+            <div>
+              <div class="review-name">Nomsa Zulu</div>
+              <div class="review-date">Durban · February 2026</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-card reveal">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">Truly a gift from the ancestors. His guidance helped me make the most important decision of my life. I was listened to deeply and treated with great respect and dignity.</p>
+          <div class="review-author">
+            <div class="review-avatar">LS</div>
+            <div>
+              <div class="review-name">Lebo Sithole</div>
+              <div class="review-date">Pretoria · January 2026</div>
+            </div>
+          </div>
+        </div>
         {% endfor %}
+      </div>
+      <div style="text-align:center;margin-top:48px;" class="reveal">
+        <a href="{% url 'review' %}" class="btn-ghost">Share Your Experience</a>
+      </div>
     </div>
-</section>
+  </section>
 
-<!-- ABOUT PREVIEW -->
-<!-- <section>
-    <h2>About Ntatemoholo Seromo</h2>
-    <p>{{ about_intro }}</p>
-    <a href="/about/" class="button-link">Read More</a>
-</section> -->
+  <!-- ═══ CONTACT ═══════════════════════════════════════════════ -->
+  <section id="contact" class="section section-mid">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-eyebrow">✦ Get in Touch</div>
+        <h2 class="section-title">Begin Your <em>Healing Journey</em></h2>
+        <div class="divider"></div>
+      </div>
+      <div class="contact-wrap">
+        <div class="contact-info reveal">
+          <h3>Connect With Us</h3>
+          <p>Every journey begins with a single step. Reach out to book a session or simply to ask a question. The ancestors are always listening.</p>
+          <div class="contact-item">
+            <div class="contact-item-icon">📍</div>
+            <div class="contact-item-text">
+              <strong>Location</strong>
+              <span>Soweto, Johannesburg, South Africa</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">📞</div>
+            <div class="contact-item-text">
+              <strong>Phone / WhatsApp</strong>
+              <span>+27 (0) 71 000 0000</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">✉</div>
+            <div class="contact-item-text">
+              <strong>Email</strong>
+              <span>seromo@sangomawisdom.co.za</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">🕐</div>
+            <div class="contact-item-text">
+              <strong>Hours</strong>
+              <span>Monday – Saturday · 8:00 – 17:00</span>
+            </div>
+          </div>
+        </div>
+        <div class="contact-form reveal">
+          <form method="POST" action="/contact/">
+            {% csrf_token %}
+            <div class="form-row">
+              <div class="form-group">
+                <label>Your Name</label>
+                <input type="text" name="name" placeholder="Full name" required>
+              </div>
+              <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" name="email" placeholder="you@email.com" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Service of Interest</label>
+              <select name="service">
+                <option value="">Select a service...</option>
+                <option>Bone Throwing (Hakata)</option>
+                <option>Herbal Medicine</option>
+                <option>Dream Interpretation</option>
+                <option>Ukuthwasa Ceremony</option>
+                <option>Spiritual Cleansing</option>
+                <option>Ancestor Connection</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Preferred Date</label>
+              <input type="date" name="preferred_date">
+            </div>
+            <div class="form-group">
+              <label>Your Message</label>
+              <textarea name="message" rows="5" placeholder="Share what brings you here. All is sacred and confidential..."></textarea>
+            </div>
+            <button type="submit" class="btn-primary" style="width:100%;padding:16px;">Send Message ✦</button>
+            <p style="font-size:12px;color:var(--text-muted);text-align:center;margin-top:10px;">All sessions are confidential. Your journey is sacred.</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- CONTACT PREVIEW -->
-<!-- <section>
-    <h2>Contact</h2>
-    <p>Email: {{ contact_email }}</p>
-    <p>Phone: {{ contact_phone }}</p>
-    <a href="/contact/" class="button-link">Contact Us</a>
-</section> -->
+  <!-- ═══ FOOTER ════════════════════════════════════════════════ -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="{% url 'home' %}" class="nav-brand" style="gap:10px;">
+          <div style="width:32px;height:32px;border:1.5px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--gold);">☽</div>
+          <span style="font-family:'Cinzel',serif;font-size:14px;color:var(--gold-light);letter-spacing:0.08em;">Ntatemoholo Seromo</span>
+        </a>
+        <p>Traditional Sangoma healer offering ancestral guidance, spiritual healing, and sacred wisdom for those seeking clarity and balance.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigate</h4>
+        <ul>
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="{% url 'services' %}">Services</a></li>
+          <li><a href="#reviews">Reviews</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="{% url 'services' %}">Bone Throwing</a></li>
+          <li><a href="{% url 'services' %}">Herbal Medicine</a></li>
+          <li><a href="{% url 'services' %}">Dream Reading</a></li>
+          <li><a href="{% url 'services' %}">Ukuthwasa</a></li>
+          <li><a href="{% url 'services' %}">Cleansing Ritual</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Account</h4>
+        <ul>
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'logout' %}">Sign Out</a></li>
+          {% else %}
+          <li><a href="#" onclick="openModal('signin')">Sign In</a></li>
+          <li><a href="#" onclick="openModal('register')">Register</a></li>
+          {% endif %}
+          <li><a href="{% url 'book' %}">Book Session</a></li>
+          <li><a href="{% url 'review' %}">Leave a Review</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Ntatemoholo Seromo · Sangoma Wisdom. All rights reserved.</p>
+      <p style="color:rgba(201,168,76,0.5);font-size:11px;letter-spacing:0.1em;">IZINYANYA ZIYABONISWA · THE ANCESTORS SEE ALL</p>
+    </div>
+  </footer>
 
-<!-- FOOTER -->
-<footer>
-    <p>&copy; 2026 Ntatemoholo Seromo | All Rights Reserved</p>
-</footer>
+</div><!-- end #page -->
 
+<!-- ═══ AUTH MODAL ════════════════════════════════════════════ -->
+<div class="modal-overlay" id="authModal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-logo">
+      <div class="symbol">☽</div>
+      <span>Ntatemoholo Seromo</span>
+    </div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tabSignin" onclick="switchTab('signin')">Sign In</button>
+      <button class="modal-tab" id="tabRegister" onclick="switchTab('register')">Register</button>
+    </div>
+
+    <!-- Sign In Panel -->
+    <div class="tab-panel active" id="panelSignin">
+      <h2 class="modal-title">Welcome Back</h2>
+      <p class="modal-sub">The ancestors have kept your place</p>
+      <div class="modal-form">
+        <form method="POST" action="/login/">
+          {% csrf_token %}
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" name="username" placeholder="you@email.com" required>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="btn-primary" style="width:100%;padding:14px;margin-top:4px;">Enter the Sacred Space →</button>
+        </form>
+        <div class="modal-divider">or</div>
+        <p style="text-align:center;font-size:12px;color:var(--text-muted);">
+          No account? <a href="#" onclick="switchTab('register')" style="color:var(--gold);text-decoration:none;">Register here</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Register Panel -->
+    <div class="tab-panel" id="panelRegister">
+      <h2 class="modal-title">Join Our Circle</h2>
+      <p class="modal-sub">Receive daily ancestral wisdom and guidance</p>
+      <div class="modal-form">
+        <form method="POST" action="/register/">
+          {% csrf_token %}
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" name="first_name" placeholder="Your name" required>
+            </div>
+            <div class="form-group">
+              <label>Surname</label>
+              <input type="text" name="last_name" placeholder="Your surname">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" name="email" placeholder="you@email.com" required>
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" name="phone" placeholder="+27 __ ___ ____">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password1" placeholder="Create a strong password" required>
+          </div>
+          <button type="submit" class="btn-primary" style="width:100%;padding:14px;margin-top:4px;">Begin My Journey →</button>
+        </form>
+        <div class="modal-divider">or</div>
+        <p style="text-align:center;font-size:12px;color:var(--text-muted);">
+          Already a member? <a href="#" onclick="switchTab('signin')" style="color:var(--gold);text-decoration:none;">Sign in</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'core/main.js' %}"></script>
 </body>
 </html>

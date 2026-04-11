@@ -1,40 +1,77 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Our Services - Ntatemoholo Seromo</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'core/style.css' %}">
-</head>
+{% extends 'core/base.html' %}
 
-<body>
+{% block title %}Our Services | Ntatemoholo Seromo{% endblock %}
 
-<nav>
-    <h2>Sangoma Wisdom</h2>
-    <div>
-        <a href="/">Home</a>
-        <a href="/services/">Services</a>
-        <a href="/book/">Book</a>
-        <a href="/review/">Reviews</a>
-    </div>
-</nav>
+{% block content %}
 
-<section class="hero">
-    <h1>Our Spiritual Services</h1>
-    <p>Guidance, Healing, and Connection to Your Ancestors</p>
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="hero-eyebrow">✦ Spiritual Offerings</div>
+    <h1 class="page-hero-title">Sacred <em>Services</em></h1>
+    <p class="page-hero-sub">Guidance, healing, and connection to your ancestors</p>
+  </div>
 </section>
 
-<section>
-    <div class="grid">
-        {% for service in services %}
-            <div class="card">
-                <h3>{{ service.name }}</h3>
-                <p>{{ service.description }}</p>
+<!-- SERVICES GRID -->
+<section class="section section-dark">
+  <div class="container">
+    <div class="services-grid">
 
-                <a href="/book/" class="button-link">Book This Service</a>
-            </div>
-        {% endfor %}
+      {% for service in services %}
+      <div class="service-card reveal">
+        <div class="service-icon">🌿</div>
+        <h3>{{ service.name }}</h3>
+        <p>{{ service.description }}</p>
+        <a href="{% url 'book' %}" class="btn-ghost" style="margin-top:20px;display:inline-block;font-size:12px;padding:10px 22px;">Book This Service</a>
+      </div>
+      {% empty %}
+      <!-- Shown when no services exist in the database yet -->
+      <div class="service-card reveal">
+        <div class="service-icon">🦴</div>
+        <h3>Bone Throwing (Hakata)</h3>
+        <p>Ancient divination using sacred bones to reveal messages from your ancestors, uncovering hidden truths and the path forward in your life.</p>
+        <a href="{% url 'book' %}" class="btn-ghost" style="margin-top:20px;display:inline-block;font-size:12px;padding:10px 22px;">Book This Service</a>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🌿</div>
+        <h3>Herbal Medicine</h3>
+        <p>Traditional plant-based healing remedies crafted from indigenous South African herbs to cleanse the body, mind and spirit of imbalances.</p>
+        <a href="{% url 'book' %}" class="btn-ghost" style="margin-top:20px;display:inline-block;font-size:12px;padding:10px 22px;">Book This Service</a>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🌙</div>
+        <h3>Dream Interpretation</h3>
+        <p>Your dreams are messages from the ancestors. Receive deep spiritual insight into recurring visions and symbols that guide your waking life.</p>
+        <a href="{% url 'book' %}" class="btn-ghost" style="margin-top:20px;display:inline-block;font-size:12px;padding:10px 22px;">Book This Service</a>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🔥</div>
+        <h3>Ukuthwasa Ceremony</h3>
+        <p>Sacred initiation and spiritual awakening ceremonies to acknowledge and honour the calling from your ancestral spirits (Amadlozi).</p>
+        <a href="{% url 'book' %}" class="btn-ghost" style="margin-top:20px;display:inline-block;font-size:12px;padding:10px 22px;">Book This Service</a>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">💧</div>
+        <h3>Spiritual Cleansing</h3>
+        <p>Ritual cleansing with sacred herbs, water, and smoke to remove negative energy, break spiritual blockages and restore inner harmony.</p>
+        <a href="{% url 'book' %}" class="btn-ghost" style="margin-top:20px;display:inline-block;font-size:12px;padding:10px 22px;">Book This Service</a>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🫀</div>
+        <h3>Ancestor Connection</h3>
+        <p>Guided sessions to reconnect with your ancestral lineage, honour those who came before, and receive their wisdom and protection.</p>
+        <a href="{% url 'book' %}" class="btn-ghost" style="margin-top:20px;display:inline-block;font-size:12px;padding:10px 22px;">Book This Service</a>
+      </div>
+      {% endfor %}
+
     </div>
+
+    <div style="text-align:center;margin-top:60px;" class="reveal">
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:20px;">Ready to begin your healing journey?</p>
+      <a href="{% url 'book' %}" class="btn-primary">Book a Session</a>
+    </div>
+  </div>
 </section>
 
-</body>
-</html>
+{% endblock %}

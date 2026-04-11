@@ -1,6 +1,74 @@
-<section class="location">
-    <h1>Our Location</h1>
-    <iframe 
-        src="https://www.google.com/maps/embed?pb=!1m18!..." 
-        width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+{% extends 'core/base.html' %}
+
+{% block title %}Location | Ntatemoholo Seromo{% endblock %}
+
+{% block content %}
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="hero-eyebrow">✦ Find Us</div>
+    <h1 class="page-hero-title">Our <em>Location</em></h1>
+    <p class="page-hero-sub">Come find us. The ancestors will guide your path here.</p>
+  </div>
 </section>
+
+<!-- LOCATION SECTION -->
+<section class="section section-dark">
+  <div class="container">
+    <div class="contact-wrap reveal">
+
+      <!-- Location Info -->
+      <div class="contact-info">
+        <h3>Visit Us in Person</h3>
+        <p>Sessions are held in a peaceful, private space prepared with sacred herbs and intention. Please contact us before arriving to confirm your appointment time.</p>
+        <div class="contact-item">
+          <div class="contact-item-icon">📍</div>
+          <div class="contact-item-text">
+            <strong>Street Address</strong>
+            <span>Soweto, Johannesburg<br>Gauteng, South Africa</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📞</div>
+          <div class="contact-item-text">
+            <strong>Call or WhatsApp</strong>
+            <span>+27 (0) 71 000 0000</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">🕐</div>
+          <div class="contact-item-text">
+            <strong>Opening Hours</strong>
+            <span>Monday – Saturday · 8:00 – 17:00<br>Sunday · By appointment only</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">🚗</div>
+          <div class="contact-item-text">
+            <strong>Directions</strong>
+            <span>Accessible via the N1 and N14. Parking available on-site. Contact us for detailed directions.</span>
+          </div>
+        </div>
+        <a href="{% url 'book' %}" class="btn-primary" style="display:inline-block;margin-top:24px;">Book Your Visit</a>
+      </div>
+
+      <!-- Map Embed -->
+      <div class="reveal">
+        <div style="border-radius:var(--radius);overflow:hidden;border:0.5px solid rgba(201,168,76,0.2);">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d57342.61222917889!2d27.85!3d-26.26!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e950c68f0406a51%3A0xe7e23c5bdf61aa4b!2sSoweto%2C%20Johannesburg!5e0!3m2!1sen!2sza!4v1680000000000"
+            width="100%" height="420" style="border:0;display:block;" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+        <p style="font-size:12px;color:var(--text-muted);text-align:center;margin-top:12px;">
+          Exact address shared upon booking confirmation.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,13 +1,23 @@
+# =====================================================
+#  Ntatemoholo Seromo — Sangoma Wisdom
+#  Forms
+#  File: core/forms.py  (REPLACE the whole file)
+# =====================================================
+
 from django import forms
 from .models import Booking, Review
-import datetime
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+import datetime
+
 
 class RegisterForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
     class Meta:
         model = User
-        fields = ['username', 'password1', 'password2']
+        fields = ['username', 'email', 'password1', 'password2']
+
 
 class BookingForm(forms.ModelForm):
     class Meta:
@@ -21,8 +31,13 @@ class BookingForm(forms.ModelForm):
         }
 
 
-
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['name', 'message', 'rating']
+
+
+class ContactForm(forms.Form):
+    name    = forms.CharField(max_length=100)
+    email   = forms.EmailField()
+    message = forms.CharField(widget=forms.Textarea)

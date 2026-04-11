@@ -1,5 +1,90 @@
-<section class="about">
-    <h1>About Ntatemoholo Seromo</h1>
-    <p>{{ about_text }}</p>
-    <a href="/" class="button-link">Back to Home</a>
+{% extends 'core/base.html' %}
+
+{% block title %}About | Ntatemoholo Seromo{% endblock %}
+
+{% block content %}
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="hero-eyebrow">✦ Our Story</div>
+    <h1 class="page-hero-title">About <em>Ntatemoholo Seromo</em></h1>
+    <p class="page-hero-sub">Rooted in the ancestral traditions of Southern Africa</p>
+  </div>
 </section>
+
+<!-- ABOUT CONTENT -->
+<section class="section section-dark">
+  <div class="container">
+    <div class="about-grid reveal">
+
+      <!-- Sacred Symbol -->
+      <div class="about-symbol">
+        <svg width="280" height="280" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="140" cy="140" r="120" stroke="rgba(201,168,76,0.2)" stroke-width="0.8"/>
+          <circle cx="140" cy="140" r="90" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+          <circle cx="140" cy="140" r="60" stroke="rgba(201,168,76,0.25)" stroke-width="0.8"/>
+          <g style="animation:spinSlow 40s linear infinite;transform-origin:140px 140px">
+            <circle cx="140" cy="20" r="5" fill="rgba(201,168,76,0.6)"/>
+            <circle cx="220" cy="60" r="3" fill="rgba(201,168,76,0.35)"/>
+            <circle cx="260" cy="140" r="5" fill="rgba(201,168,76,0.6)"/>
+            <circle cx="220" cy="220" r="3" fill="rgba(201,168,76,0.35)"/>
+            <circle cx="140" cy="260" r="5" fill="rgba(201,168,76,0.6)"/>
+            <circle cx="60" cy="220" r="3" fill="rgba(201,168,76,0.35)"/>
+            <circle cx="20" cy="140" r="5" fill="rgba(201,168,76,0.6)"/>
+            <circle cx="60" cy="60" r="3" fill="rgba(201,168,76,0.35)"/>
+          </g>
+          <path d="M140 80 L148 120 L188 112 L156 140 L188 168 L148 160 L140 200 L132 160 L92 168 L124 140 L92 112 L132 120 Z"
+            fill="rgba(201,168,76,0.12)" stroke="rgba(201,168,76,0.5)" stroke-width="0.8"/>
+          <circle cx="140" cy="140" r="12" fill="rgba(201,168,76,0.15)" stroke="rgba(201,168,76,0.6)" stroke-width="1"/>
+          <text x="140" y="145" text-anchor="middle" font-size="14" fill="rgba(201,168,76,0.9)" font-family="serif">☽</text>
+        </svg>
+      </div>
+
+      <!-- Text -->
+      <div class="about-text">
+        <h3>Rooted in Ancestral Tradition</h3>
+        {% if about_text %}
+          <p>{{ about_text }}</p>
+        {% else %}
+          <p>Ntatemoholo Seromo is a revered Sangoma healer with deep roots in Southern African spiritual tradition. A Sangoma is a traditional healer who acts as an intermediary between the living and the ancestral world — diagnosing illness, offering guidance, and facilitating healing ceremonies.</p>
+          <p>Through years of training under master healers, Ntatemoholo Seromo carries forward the sacred knowledge of bone throwing, herbal medicine, dream interpretation, and ancestral communication to bring balance and clarity to those in need.</p>
+          <p>The calling of a Sangoma — known as <em>Ukuthwasa</em> — is not chosen but received. It is an honour passed through the bloodline of the ancestors, and one that carries with it a lifetime of service, humility, and dedication to those who seek healing.</p>
+        {% endif %}
+        <div class="about-stat-row">
+          <div class="about-stat"><strong>20+</strong><span>Years of Practice</span></div>
+          <div class="about-stat"><strong>1,200+</strong><span>Souls Guided</span></div>
+          <div class="about-stat"><strong>∞</strong><span>Ancestral Lineage</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WHAT IS A SANGOMA -->
+<section class="section section-mid">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-eyebrow">✦ Understanding the Tradition</div>
+      <h2 class="section-title">What is a <em>Sangoma?</em></h2>
+      <div class="divider"></div>
+    </div>
+    <div style="max-width:720px;margin:0 auto;" class="reveal">
+      <p style="font-size:15px;font-weight:300;color:var(--text-muted);line-height:1.9;margin-bottom:20px;">
+        A Sangoma is a traditional healer in Nguni Southern African culture who is believed to be a conduit between the world of the living and the world of the ancestors (Amadlozi). They are consulted by those who are sick, by those who seek direction, and by those who feel spiritually unaligned.
+      </p>
+      <p style="font-size:15px;font-weight:300;color:var(--text-muted);line-height:1.9;margin-bottom:20px;">
+        Unlike izinyanga (herbalists), a Sangoma's primary role is divination — using tools such as bones, shells, coins, and other sacred objects to communicate with ancestral spirits. This process is known as <em>ukubhula</em> (throwing bones) and is a deeply respected spiritual practice across South Africa, Zimbabwe, Mozambique, and Swaziland.
+      </p>
+      <p style="font-size:15px;font-weight:300;color:var(--text-muted);line-height:1.9;">
+        The training to become a Sangoma, known as <em>Ukuthwasa</em>, is rigorous and spiritually demanding. It requires living under the guidance of a senior Sangoma and can last several years. It is only complete once the ancestors confirm readiness through ceremony and sign.
+      </p>
+    </div>
+    <div style="text-align:center;margin-top:48px;" class="reveal">
+      <a href="{% url 'services' %}" class="btn-primary">Explore Our Services</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

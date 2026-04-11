@@ -1,10 +1,92 @@
-<section class="contact">
-    <h1>Contact Us</h1>
-    <form method="POST">
-        {% csrf_token %}
-        <label>Name:</label>{{ form.name }}
-        <label>Email:</label>{{ form.email }}
-        <label>Message:</label>{{ form.message }}
-        <button type="submit">Send Message</button>
-    </form>
+{% extends 'core/base.html' %}
+
+{% block title %}Contact Us | Ntatemoholo Seromo{% endblock %}
+
+{% block content %}
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="hero-eyebrow">✦ Reach Out</div>
+    <h1 class="page-hero-title">Get in <em>Touch</em></h1>
+    <p class="page-hero-sub">Every journey begins with a single step. We are here to guide you.</p>
+  </div>
 </section>
+
+<!-- CONTACT SECTION -->
+<section class="section section-dark">
+  <div class="container">
+    <div class="contact-wrap">
+
+      <!-- Contact Info -->
+      <div class="contact-info reveal">
+        <h3>Connect With Us</h3>
+        <p>Reach out to book a session or simply to ask a question. The ancestors are always listening, and so are we.</p>
+        <div class="contact-item">
+          <div class="contact-item-icon">📍</div>
+          <div class="contact-item-text">
+            <strong>Location</strong>
+            <span>Soweto, Johannesburg, South Africa</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📞</div>
+          <div class="contact-item-text">
+            <strong>Phone / WhatsApp</strong>
+            <span>+27 (0) 71 000 0000</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">✉</div>
+          <div class="contact-item-text">
+            <strong>Email</strong>
+            <span>seromo@sangomawisdom.co.za</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">🕐</div>
+          <div class="contact-item-text">
+            <strong>Hours</strong>
+            <span>Monday – Saturday · 8:00 – 17:00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="contact-form reveal">
+        {% if message %}
+          <div class="form-feedback feedback-success" style="margin-bottom:20px;">
+            {{ message }}
+          </div>
+        {% endif %}
+
+        <form method="POST">
+          {% csrf_token %}
+          <div class="form-row">
+            <div class="form-group">
+              <label>Your Name</label>
+              {{ form.name }}
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              {{ form.email }}
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Your Message</label>
+            {{ form.message }}
+          </div>
+          <button type="submit" class="btn-primary" style="width:100%;padding:16px;">
+            Send Message ✦
+          </button>
+          <p style="font-size:12px;color:var(--text-muted);text-align:center;margin-top:10px;">
+            All sessions are confidential. Your journey is sacred.
+          </p>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

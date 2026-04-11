@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Ntatemoholo Seromo | Sangoma Wisdom{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'core/style.css' %}">
+{% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- BACKGROUND SLIDESHOW -->
+<div id="bg-canvas">
+  <div class="slide active" style="background-image:url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1455156218388-5e61b526818b?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1499244571948-7ccddb3583f1?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80')"></div>
+  <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1530569673472-307dc017a82d?w=1920&q=80')"></div>
+</div>
+<div id="bg-label">Mountain</div>
+
+<div id="page">
+
+  <!-- NAVBAR -->
+  <nav id="navbar">
+    <a href="{% url 'home' %}" class="nav-brand">
+      <div class="symbol">☽</div>
+      <span>Ntatemoholo Seromo</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="{% url 'home' %}#about">About</a></li>
+      <li><a href="{% url 'services' %}">Services</a></li>
+      <li><a href="{% url 'review' %}">Reviews</a></li>
+      <li><a href="{% url 'home' %}#contact">Contact</a></li>
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'logout' %}" class="btn-outline">Sign Out</a></li>
+      {% else %}
+        <li><a href="{% url 'login' %}" class="btn-outline">Sign In</a></li>
+        <li><a href="{% url 'register' %}" class="btn-filled">Register</a></li>
+      {% endif %}
+    </ul>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- PAGE CONTENT -->
+  {% block content %}{% endblock %}
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="{% url 'home' %}" class="nav-brand" style="gap:10px;">
+          <div style="width:32px;height:32px;border:1.5px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--gold);">☽</div>
+          <span style="font-family:'Cinzel',serif;font-size:14px;color:var(--gold-light);letter-spacing:0.08em;">Ntatemoholo Seromo</span>
+        </a>
+        <p>Traditional Sangoma healer offering ancestral guidance, spiritual healing, and sacred wisdom for those seeking clarity and balance.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigate</h4>
+        <ul>
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="{% url 'home' %}#about">About</a></li>
+          <li><a href="{% url 'services' %}">Services</a></li>
+          <li><a href="{% url 'review' %}">Reviews</a></li>
+          <li><a href="{% url 'home' %}#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="{% url 'services' %}">Bone Throwing</a></li>
+          <li><a href="{% url 'services' %}">Herbal Medicine</a></li>
+          <li><a href="{% url 'services' %}">Dream Reading</a></li>
+          <li><a href="{% url 'services' %}">Ukuthwasa</a></li>
+          <li><a href="{% url 'services' %}">Cleansing Ritual</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Account</h4>
+        <ul>
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'logout' %}">Sign Out</a></li>
+          {% else %}
+          <li><a href="{% url 'login' %}">Sign In</a></li>
+          <li><a href="{% url 'register' %}">Register</a></li>
+          {% endif %}
+          <li><a href="{% url 'book' %}">Book Session</a></li>
+          <li><a href="{% url 'review' %}">Leave a Review</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Ntatemoholo Seromo · Sangoma Wisdom. All rights reserved.</p>
+      <p style="color:rgba(201,168,76,0.5);font-size:11px;letter-spacing:0.1em;">IZINYANYA ZIYABONISWA · THE ANCESTORS SEE ALL</p>
+    </div>
+  </footer>
+
+</div><!-- end #page -->
+
+<script src="{% static 'core/main.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

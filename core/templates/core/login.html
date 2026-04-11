@@ -1,0 +1,37 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Sign In | Ntatemoholo Seromo{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="hero-eyebrow">✦ Welcome Back</div>
+    <h1 class="page-hero-title">Sign <em>In</em></h1>
+    <p class="page-hero-sub">The ancestors have kept your place</p>
+  </div>
+</section>
+
+<section class="section section-dark">
+  <div class="container">
+    <div class="form-page-wrap reveal">
+      <div class="form-page-card">
+        <div class="form-page-header">
+          <div class="form-page-icon">☽</div>
+          <h2>Enter the Sacred Space</h2>
+          <p>Sign in to access your bookings and daily messages.</p>
+        </div>
+        {% if message %}<div class="form-feedback feedback-error">{{ message }}</div>{% endif %}
+        <form method="POST" class="contact-form">
+          {% csrf_token %}
+          <div class="form-group"><label>Username</label>{{ form.username }}</div>
+          <div class="form-group"><label>Password</label>{{ form.password }}</div>
+          <button type="submit" class="btn-primary" style="width:100%;padding:14px;margin-top:8px;">Sign In →</button>
+        </form>
+        <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:20px;">
+          No account? <a href="{% url 'register' %}" style="color:var(--gold);text-decoration:none;">Register here</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
