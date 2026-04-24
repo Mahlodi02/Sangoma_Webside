@@ -103,30 +103,45 @@
         <div class="divider"></div>
       </div>
       <div class="about-grid reveal">
-        <div class="about-symbol">
-          <svg width="280" height="280" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="140" cy="140" r="120" stroke="rgba(201,168,76,0.2)" stroke-width="0.8"/>
-            <circle cx="140" cy="140" r="90" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
-            <circle cx="140" cy="140" r="60" stroke="rgba(201,168,76,0.25)" stroke-width="0.8"/>
-            <g style="animation:spinSlow 40s linear infinite;transform-origin:140px 140px">
-              <circle cx="140" cy="20" r="5" fill="rgba(201,168,76,0.6)"/>
-              <circle cx="220" cy="60" r="3" fill="rgba(201,168,76,0.35)"/>
-              <circle cx="260" cy="140" r="5" fill="rgba(201,168,76,0.6)"/>
-              <circle cx="220" cy="220" r="3" fill="rgba(201,168,76,0.35)"/>
-              <circle cx="140" cy="260" r="5" fill="rgba(201,168,76,0.6)"/>
-              <circle cx="60" cy="220" r="3" fill="rgba(201,168,76,0.35)"/>
-              <circle cx="20" cy="140" r="5" fill="rgba(201,168,76,0.6)"/>
-              <circle cx="60" cy="60" r="3" fill="rgba(201,168,76,0.35)"/>
-            </g>
-            <path d="M140 80 L148 120 L188 112 L156 140 L188 168 L148 160 L140 200 L132 160 L92 168 L124 140 L92 112 L132 120 Z"
-              fill="rgba(201,168,76,0.12)" stroke="rgba(201,168,76,0.5)" stroke-width="0.8"/>
-            <circle cx="140" cy="140" r="12" fill="rgba(201,168,76,0.15)" stroke="rgba(201,168,76,0.6)" stroke-width="1"/>
-            <text x="140" y="145" text-anchor="middle" font-size="14" fill="rgba(201,168,76,0.9)" font-family="serif">☽</text>
-          </svg>
-        </div>
+       <div class="about-symbol">
+  <svg width="380" height="380" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="140" cy="140" r="120" stroke="rgba(201,168,76,0.2)" stroke-width="0.8"/>
+    <circle cx="140" cy="140" r="90" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+    <circle cx="140" cy="140" r="60" stroke="rgba(201,168,76,0.25)" stroke-width="0.8"/>
+    <g style="animation:spinSlow 40s linear infinite;transform-origin:140px 140px">
+      <circle cx="140" cy="20" r="5" fill="rgba(201,168,76,0.6)"/>
+      <circle cx="220" cy="60" r="3" fill="rgba(201,168,76,0.35)"/>
+      <circle cx="260" cy="140" r="5" fill="rgba(201,168,76,0.6)"/>
+      <circle cx="220" cy="220" r="3" fill="rgba(201,168,76,0.35)"/>
+      <circle cx="140" cy="260" r="5" fill="rgba(201,168,76,0.6)"/>
+      <circle cx="60" cy="220" r="3" fill="rgba(201,168,76,0.35)"/>
+      <circle cx="20" cy="140" r="5" fill="rgba(201,168,76,0.6)"/>
+      <circle cx="60" cy="60" r="3" fill="rgba(201,168,76,0.35)"/>
+    </g>
+    <path d="M140 80 L148 120 L188 112 L156 140 L188 168 L148 160 L140 200 L132 160 L92 168 L124 140 L92 112 L132 120 Z"
+      fill="rgba(201,168,76,0.12)" stroke="rgba(201,168,76,0.5)" stroke-width="0.8"/>
+
+    <!-- Gold ring around leopard -->
+    <circle cx="140" cy="140" r="52" fill="rgba(201,168,76,0.08)" stroke="rgba(201,168,76,0.7)" stroke-width="1.5"/>
+
+    <!-- Leopard face clipped into circle -->
+    <defs>
+      <clipPath id="leopardCircleAbout">
+        <circle cx="140" cy="140" r="50"/>
+      </clipPath>
+    </defs>
+    <image href="/static/core/images/leapard.jpg"
+           xlink:href="/static/core/images/leapard.jpg"
+           x="90" y="90"
+           width="100" height="100"
+           clip-path="url(#leopardCircleAbout)"
+           preserveAspectRatio="xMidYMid slice"/>
+
+  </svg>
+</div>
         <div class="about-text">
           <h3>Rooted in Ancestral Tradition</h3>
-          <p>Ntatemoholo Seromo is a revered Sangoma healer with deep roots in Southern African spiritual tradition. A Sangoma is a traditional healer who acts as an intermediary between the living and the ancestral world — diagnosing illness, offering guidance, and facilitating healing ceremonies.</p>
+          <p>Ntatemoholo Seromo is a counselor and revered Sangoma healer with deep roots in Southern African spiritual tradition. A Sangoma is a traditional healer who acts as an intermediary between the living and the ancestral world — diagnosing illness, offering guidance, and facilitating healing ceremonies.</p>
           <p>Through years of training under master healers, Ntatemoholo Seromo carries forward the sacred knowledge of bone throwing, herbal medicine, dream interpretation, and ancestral communication to bring balance and clarity to those in need.</p>
           <div class="about-stat-row">
             <div class="about-stat"><strong>40+</strong><span>Years of Practice</span></div>
@@ -348,8 +363,12 @@
     <div class="footer-inner">
       <div class="footer-brand">
         <a href="{% url 'home' %}" class="nav-brand" style="gap:10px;">
-          <div style="width:32px;height:32px;border:1.5px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--gold);">☽</div>
-          <span style="font-family:'Cinzel',serif;font-size:14px;color:var(--gold-light);letter-spacing:0.08em;">Ntatemoholo Seromo</span>
+          <div style="width:32px;height:32px;border:1.5px solid var(--gold);border-radius:50%;overflow:hidden;flex-shrink:0;">
+  <img src="/static/core/images/leapard.jpg"
+       alt="Leopard"
+       style="width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:50%;">
+</div>
+          <span style="font-family:'Permanent Marker', cursive;font-size:14px;color:var(--gold-light);letter-spacing:0.08em;">Ntatemoholo Seromo</span>
         </a>
         <p>Traditional Sangoma healer offering ancestral guidance, spiritual healing, and sacred wisdom for those seeking clarity and balance.</p>
       </div>
@@ -399,10 +418,14 @@
 <div class="modal-overlay" id="authModal" onclick="closeModalOutside(event)">
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">✕</button>
-    <div class="modal-logo">
-      <div class="symbol">☽</div>
-      <span>Ntatemoholo Seromo</span>
-    </div>
+   <div class="modal-logo">
+  <div class="symbol" style="overflow:hidden;">
+    <img src="/static/core/images/leapard.jpg"
+         alt="Leopard"
+         style="width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:50%;">
+  </div>
+  <span>Ntatemoholo Seromo</span>
+</div>
     <div class="modal-tabs">
       <button class="modal-tab active" id="tabSignin" onclick="switchTab('signin')">Sign In</button>
       <button class="modal-tab" id="tabRegister" onclick="switchTab('register')">Register</button>

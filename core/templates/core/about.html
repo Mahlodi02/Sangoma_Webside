@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}About | Ntatemoholo Seromo{% endblock %}
 
@@ -39,8 +40,17 @@
             fill="rgba(201,168,76,0.12)" stroke="rgba(201,168,76,0.5)" stroke-width="0.8" />
           <circle cx="140" cy="140" r="12" fill="rgba(201,168,76,0.15)" stroke="rgba(201,168,76,0.6)"
             stroke-width="1" />
-          <text x="140" y="145" text-anchor="middle" font-size="14" fill="rgba(201,168,76,0.9)"
-            font-family="serif">☽</text>
+          <image href="{% static 'core/images/leapard.jpg' %}" 
+       x="128" y="128" 
+       width="24" height="24" 
+       clip-path="url(#leopardCircle)"
+       preserveAspectRatio="xMidYMid slice"/>
+
+<defs>
+  <clipPath id="leopardCircle">
+    <circle cx="140" cy="140" r="12"/>
+  </clipPath>
+</defs>
         </svg>
       </div>
 
@@ -50,7 +60,7 @@
         {% if about_text %}
         <p>{{ about_text }}</p>
         {% else %}
-        <p>Ntatemoholo Seromo is a revered Sangoma healer with deep roots in Southern African spiritual tradition. A
+        <p>Ntatemoholo Seromo is a counselor and revered Sangoma healer with deep roots in Southern African spiritual tradition. A
           Sangoma is a traditional healer who acts as an intermediary between the living and the ancestral world —
           diagnosing illness, offering guidance, and facilitating healing ceremonies.</p>
         <p>Through years of training under master healers, Ntatemoholo Seromo carries forward the sacred knowledge of

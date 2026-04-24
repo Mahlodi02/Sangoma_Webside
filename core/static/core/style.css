@@ -429,7 +429,7 @@ nav.scrolled {
 
 .section-title em {
   font-style: italic;
-  color: var(--gold-light);
+  color: #FAC55B;
 }
 
 .divider {
@@ -649,7 +649,7 @@ nav.scrolled {
 .contact-info h3 {
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.8rem;
-  font-weight: 300;
+  font-weight: bold;
   color: #fff;
   margin-bottom: 16px;
 }
@@ -1149,7 +1149,7 @@ footer {
 
 .page-hero-title em {
   font-style: italic;
-  color: var(--gold-light);
+  color: #FAC55B;
   display: block;
 }
 
