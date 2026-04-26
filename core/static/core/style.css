@@ -1155,7 +1155,7 @@ footer {
 
 .page-hero-sub {
   font-size: 16px;
-  font-weight: 300;
+  font-weight: bold;
   color: var(--text-muted);
   line-height: 1.8;
 }
