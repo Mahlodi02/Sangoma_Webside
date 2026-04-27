@@ -29,3 +29,15 @@ class Review(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class DailyMessage(models.Model):
+    text = models.TextField(help_text="Write the daily encouragement shown on the homepage.")
+    active = models.BooleanField(default=True, help_text="Only active messages are shown on the homepage.")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Daily message ({self.created_at:%Y-%m-%d %H:%M})"

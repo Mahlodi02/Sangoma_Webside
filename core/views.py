@@ -7,7 +7,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
-from .models import Service, Review
+from .models import Service, Review, DailyMessage
 from .forms import BookingForm, ReviewForm, ContactForm, RegisterForm
 from django.db import IntegrityError
 from datetime import date
@@ -49,6 +49,10 @@ DAILY_MESSAGES = [
 
 
 def get_daily_message():
+    latest = DailyMessage.objects.filter(active=True).order_by('-created_at').first()
+    if latest:
+        return latest.text
+
     today = date.today()
     day_of_year = today.timetuple().tm_yday
     return DAILY_MESSAGES[day_of_year % len(DAILY_MESSAGES)]
