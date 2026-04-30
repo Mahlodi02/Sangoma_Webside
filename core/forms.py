@@ -5,7 +5,7 @@
 # =====================================================
 
 from django import forms
-from .models import Booking, Review
+from .models import Booking, Review, DailyMessageComment
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 import datetime
@@ -41,3 +41,15 @@ class ContactForm(forms.Form):
     name    = forms.CharField(max_length=100)
     email   = forms.EmailField()
     message = forms.CharField(widget=forms.Textarea)
+
+
+class DailyMessageCommentForm(forms.ModelForm):
+    class Meta:
+        model = DailyMessageComment
+        fields = ['text']
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'rows': 4,
+                'placeholder': 'Write a positive thought or encouragement for others...'
+            })
+        }

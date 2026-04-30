@@ -7,65 +7,51 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
-from .models import Service, Review, DailyMessage
-from .forms import BookingForm, ReviewForm, ContactForm, RegisterForm
+from .models import Service, Review, DailyMessage, DailyMessageComment
+from .forms import BookingForm, ReviewForm, ContactForm, RegisterForm, DailyMessageCommentForm
 from django.db import IntegrityError
-from datetime import date
 
 
 # ─── DAILY MESSAGES ───────────────────────────────────────────────
-DAILY_MESSAGES = [
-    "Trust the ancestors — your path is guided by those who loved you before time.",
-    "Healing begins within your spirit; still the noise and listen to what is ancient.",
-    "You are protected and aligned with your purpose. Walk without fear today.",
-    "Peace flows through you like the sacred river — clear, constant, unstoppable.",
-    "Your journey is sacred. Every step, even the uncertain ones, has been blessed.",
-    "The bones do not lie. What is meant for you will find you in its season.",
-    "You were not given this life to carry it alone. Your ancestors stand beside you.",
-    "Like the mountain, you have survived every storm that came before this one.",
-    "The sunrise does not ask permission — neither should your healing begin today.",
-    "Be still as the cave in darkness; wisdom lives in the quiet, not the noise.",
-    "Your roots go deeper than your pain. Draw strength from all who came before.",
-    "Even the ocean, vast and powerful, knows when to be calm. So too can your heart.",
-    "What grows in the wild places was not planted by human hands — so too your spirit.",
-    "The stars remember every name. Yours has been spoken in the heavens since before.",
-    "Flowers bloom in cracked earth. From your brokenness, something sacred will rise.",
-    "Stone endures what water cannot hold. Your endurance is your greatest medicine.",
-    "Walk softly upon this earth — she holds the bones of those who guide you still.",
-    "A new day is not just a beginning; it is an answered prayer from the night before.",
-    "You have ancestors who faced fires darker than yours, and still they sang. So can you.",
-    "The clouds part for no one, yet the sun always waits patiently behind them. So does joy.",
-    "To know yourself is the beginning of all wisdom — start there, today, without rushing.",
-    "Let the river teach you: it does not fight its banks. It finds its way around every obstacle.",
-    "In the silence after prayer, the ancestors lean in close. Be still enough to hear them.",
-    "Your calling was written before your birth. You are not lost — you are still arriving.",
-    "Every tree you see began as something that could be crushed underfoot. Remember this.",
-    "The night is not against you. It is preparing you for a morning you have not yet imagined.",
-    "Tend your inner world as you would a sacred fire — with patience, care, and intention.",
-    "What the eyes cannot see, the spirit knows. Trust your deep knowing today.",
-    "You are the harvest of generations of prayers and endurance. Do not forget your worth.",
-    "Today, breathe. Tomorrow will come whether or not you carry its weight today.",
-]
-
-
 def get_daily_message():
     latest = DailyMessage.objects.filter(active=True).order_by('-created_at').first()
-    if latest:
-        return latest.text
-
-    today = date.today()
-    day_of_year = today.timetuple().tm_yday
-    return DAILY_MESSAGES[day_of_year % len(DAILY_MESSAGES)]
+    return latest.text if latest else 'Lesedi'
 
 
 # ─── HOME ──────────────────────────────────────────────────────────
 def home(request):
     services = Service.objects.all()
     reviews = Review.objects.all().order_by('-created_at')
+    daily_message_obj = DailyMessage.objects.filter(active=True).order_by('-created_at').first()
+    daily_message = (daily_message_obj.text if daily_message_obj else 'Lesedi') if request.user.is_authenticated else None
+    daily_message_comments = daily_message_obj.comments.all() if request.user.is_authenticated and daily_message_obj else []
+    comment_message = ''
+
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return redirect('login')
+        if daily_message_obj:
+            comment_form = DailyMessageCommentForm(request.POST)
+            if comment_form.is_valid():
+                comment = comment_form.save(commit=False)
+                comment.daily_message = daily_message_obj
+                comment.user = request.user
+                comment.save()
+                comment_message = '✅ Your comment has been posted. Thank you for sharing encouragement.'
+                comment_form = DailyMessageCommentForm()
+        else:
+            comment_form = None
+    else:
+        comment_form = DailyMessageCommentForm() if request.user.is_authenticated and daily_message_obj else None
+
     return render(request, 'core/home.html', {
         'services': services,
         'reviews': reviews,
-        'daily_message': get_daily_message(),
+        'daily_message': daily_message,
+        'daily_message_obj': daily_message_obj,
+        'daily_message_comments': daily_message_comments,
+        'comment_form': comment_form,
+        'comment_message': comment_message,
     })
 
 

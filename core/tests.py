@@ -12,21 +12,34 @@ class HomeViewTests(TestCase):
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'core/home.html')
-        self.assertContains(response, "Today's Sacred Message")
 
-    def test_home_displays_active_admin_daily_message(self):
+    def test_home_displays_active_admin_daily_message_for_authenticated_user(self):
         DailyMessage.objects.create(text='Be encouraged today.', active=True)
         DailyMessage.objects.create(text='Inactive message', active=False)
+        user = User.objects.create_user(username='member', password='Secret123!')
+        self.client.login(username='member', password='Secret123!')
 
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Be encouraged today.')
         self.assertEqual(response.context['daily_message'], 'Be encouraged today.')
 
-    def test_home_falls_back_when_no_admin_message(self):
+    def test_home_requires_login_to_view_daily_message(self):
+        DailyMessage.objects.create(text='Hidden message', active=True)
+
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(response.context['daily_message'])
+        self.assertNotContains(response, 'Hidden message')
+        self.assertContains(response, 'Register to view today’s message')
+
+    def test_authenticated_user_sees_default_message_when_no_admin_message(self):
+        user = User.objects.create_user(username='member', password='Secret123!')
+        self.client.login(username='member', password='Secret123!')
+
+        response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['daily_message'], 'Lesedi')
+        self.assertContains(response, 'Lesedi')
 
 
 class PageViewTests(TestCase):

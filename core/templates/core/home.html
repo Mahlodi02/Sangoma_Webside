@@ -78,10 +78,50 @@
         through the ancient wisdom of the Sangoma tradition.
       </p>
 
-      <div class="daily-card">
-        <div class="daily-label">✦ Today's Sacred Message</div>
-        <div class="daily-msg" id="dailyMsg">{{ daily_message }}</div>
-      </div>
+      {% if user.is_authenticated %}
+        <div class="daily-card">
+          <div class="daily-label">✦ Today's Sacred Message</div>
+          <div class="daily-msg" id="dailyMsg">{{ daily_message }}</div>
+        </div>
+
+        {% if comment_message %}
+        <div class="daily-comment-alert">{{ comment_message }}</div>
+        {% endif %}
+
+        <div class="daily-comments">
+          <h3>Community Encouragement</h3>
+          {% if daily_message_comments %}
+            {% for comment in daily_message_comments %}
+              <div class="comment-item">
+                <div class="comment-author">
+                  {% if comment.user %}
+                    {{ comment.user.username }}
+                  {% else %}
+                    Anonymous
+                  {% endif %}
+                </div>
+                <div class="comment-text">{{ comment.text }}</div>
+                <div class="comment-date">{{ comment.created_at|date:"F j, Y H:i" }}</div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="comment-empty">No comments yet — be the first to share encouragement.</p>
+          {% endif %}
+
+          {% if comment_form %}
+          <form method="post" class="comment-form">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <button type="submit" class="btn-primary">Post Comment</button>
+          </form>
+          {% endif %}
+        </div>
+      {% else %}
+        <div class="daily-card">
+          <div class="daily-label">✦ Register to view today’s message</div>
+          <div class="daily-msg">Create an account to read the daily encouragement and share your own uplifting comment.</div>
+        </div>
+      {% endif %}
 
       <div class="hero-actions">
         <a href="#" class="btn-primary" onclick="openModal('register')">Begin Your Journey</a>
