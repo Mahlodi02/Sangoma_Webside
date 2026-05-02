@@ -32,7 +32,7 @@ SECRET_KEY = env('SECRET_KEY') if env else 'django-insecure-1hwe^=i*12@q)%w3d9bh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG') if env else True
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[]) if env else []
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['sangoma-webside-1.onrender.com']) if env else []
 
 
 # Application definition
@@ -131,3 +131,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+# Default primary key field type
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
