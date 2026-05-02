@@ -30,10 +30,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env('SECRET_KEY') if env else 'django-insecure-1hwe^=i*12@q)%w3d9bhk)o7j!wgtjl3&xk=+7+pra#dy(or4#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG') if env else True
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['sangoma-webside-1.onrender.com']) if env else []
-
+ALLOWED_HOSTS = [
+    'sangoma-webside-1.onrender.com',
+    'localhost',
+    '127.0.0.1',
+]
 
 # Application definition
 
@@ -131,6 +134,14 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://sangoma-webside-1.onrender.com',
+]
+
 
 
 # Default primary key field type
