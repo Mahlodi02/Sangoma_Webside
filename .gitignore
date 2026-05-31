@@ -18,4 +18,4 @@ __pycache__/
 Thumbs.db
 
 # static files
-staticfiles/
+staticfiles/db.sqlite3

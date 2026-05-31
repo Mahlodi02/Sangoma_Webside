@@ -3,63 +3,36 @@
 #  Views
 #  File: core/views.py  (REPLACE the whole file)
 # =====================================================
-
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout, authenticate
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 from .models import Service, Review, DailyMessage, DailyMessageComment
-from .forms import BookingForm, ReviewForm, ContactForm, RegisterForm, DailyMessageCommentForm
+from .forms import BookingForm, ReviewForm, ContactForm, RegisterForm
 from django.db import IntegrityError
-
-
-# ─── DAILY MESSAGES ───────────────────────────────────────────────
-def get_daily_message():
-    latest = DailyMessage.objects.filter(active=True).order_by('-created_at').first()
-    return latest.text if latest else 'Lesedi'
+import json
+from django.contrib import messages
 
 
 # ─── HOME ──────────────────────────────────────────────────────────
 def home(request):
-    services = Service.objects.all()
-    reviews = Review.objects.all().order_by('-created_at')
-    daily_message_obj = DailyMessage.objects.filter(active=True).order_by('-created_at').first()
-    daily_message = (daily_message_obj.text if daily_message_obj else 'Lesedi') if request.user.is_authenticated else None
-    daily_message_comments = daily_message_obj.comments.all() if request.user.is_authenticated and daily_message_obj else []
-    comment_message = ''
-
-    if request.method == 'POST':
-        if not request.user.is_authenticated:
-            return redirect('login')
-        if daily_message_obj:
-            comment_form = DailyMessageCommentForm(request.POST)
-            if comment_form.is_valid():
-                comment = comment_form.save(commit=False)
-                comment.daily_message = daily_message_obj
-                comment.user = request.user
-                comment.save()
-                comment_message = '✅ Your comment has been posted. Thank you for sharing encouragement.'
-                comment_form = DailyMessageCommentForm()
-        else:
-            comment_form = None
-    else:
-        comment_form = DailyMessageCommentForm() if request.user.is_authenticated and daily_message_obj else None
-
+    services      = Service.objects.all()
+    reviews       = Review.objects.all().order_by('-created_at')
+    latest_msg    = DailyMessage.objects.filter(active=True).first()
+    daily_message = latest_msg.text if latest_msg else "The ancestors are preparing today's message. Check back soon. ✦"
     return render(request, 'core/home.html', {
-        'services': services,
-        'reviews': reviews,
+        'services':      services,
+        'reviews':       reviews,
         'daily_message': daily_message,
-        'daily_message_obj': daily_message_obj,
-        'daily_message_comments': daily_message_comments,
-        'comment_form': comment_form,
-        'comment_message': comment_message,
+        'latest_msg':    latest_msg,
     })
 
 
 # ─── ABOUT ─────────────────────────────────────────────────────────
 def about(request):
-    return render(request, 'core/about.html', {
-        'about_text': None,
-    })
+    return render(request, 'core/about.html', {'about_text': None})
 
 
 # ─── SERVICES ──────────────────────────────────────────────────────
@@ -71,16 +44,16 @@ def services(request):
 
 # ─── BOOK ──────────────────────────────────────────────────────────
 def book(request):
-    message = ""
+    message = ''
     if request.method == 'POST':
         form = BookingForm(request.POST)
         if form.is_valid():
             try:
                 form.save()
-                message = "✅ Your appointment has been booked successfully!"
+                message = '✅ Your appointment has been booked successfully!'
                 form = BookingForm()
             except IntegrityError:
-                message = "❌ This date is already booked for that service."
+                message = '❌ This date is already booked for that service.'
     else:
         form = BookingForm()
     return render(request, 'core/book.html', {'form': form, 'message': message})
@@ -88,12 +61,12 @@ def book(request):
 
 # ─── REVIEW ────────────────────────────────────────────────────────
 def review(request):
-    message = ""
+    message = ''
     if request.method == 'POST':
         form = ReviewForm(request.POST)
         if form.is_valid():
             form.save()
-            message = "✅ Thank you for your review!"
+            message = '✅ Thank you for your review!'
             form = ReviewForm()
     else:
         form = ReviewForm()
@@ -102,11 +75,11 @@ def review(request):
 
 # ─── CONTACT ───────────────────────────────────────────────────────
 def contact(request):
-    message = ""
+    message = ''
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-            message = "✅ Your message has been sent. We will be in touch soon."
+            message = '✅ Your message has been sent. We will be in touch soon.'
             form = ContactForm()
     else:
         form = ContactForm()
@@ -124,29 +97,140 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
-            return redirect('home')
+            # Use POST-Redirect-GET and Django messages so success reliably appears
+            registered_name = user.first_name or user.username
+            messages.success(request, f"✅ Account created successfully! Welcome, {registered_name}.")
+            return redirect('register')
     else:
         form = RegisterForm()
     return render(request, 'core/register.html', {'form': form})
 
-
 # ─── LOGIN ─────────────────────────────────────────────────────────
 def user_login(request):
-    message = ""
+    message = ''
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
-            login(request, form.get_user())
+            user = form.get_user()
+            login(request, user)
             return redirect('home')
         else:
-            message = "❌ Invalid credentials. Please try again."
+            # Show exactly what is wrong
+            message = '❌ Invalid username or password. Note: login uses your USERNAME not your email.'
     else:
         form = AuthenticationForm()
     return render(request, 'core/login.html', {'form': form, 'message': message})
-
 
 # ─── LOGOUT ────────────────────────────────────────────────────────
 def user_logout(request):
     logout(request)
     return redirect('home')
+
+
+# ═══════════════════════════════════════════════════════════════════
+# DAILY MESSAGE FEED — Facebook-style (login required)
+# ═══════════════════════════════════════════════════════════════════
+
+@login_required(login_url='login')
+def daily_messages_feed(request):
+    from .models import MessageReaction
+
+    messages_list = DailyMessage.objects.filter(active=True)
+    for msg in messages_list:
+        try:
+            msg.user_reaction = MessageReaction.objects.get(
+                daily_message=msg, user=request.user
+            ).emoji
+        except MessageReaction.DoesNotExist:
+            msg.user_reaction = None
+        msg.comment_count   = msg.comments.count()
+        msg.reaction_count  = msg.reactions.count()
+    return render(request, 'core/daily_messages_feed.html', {
+        'messages_list': messages_list,
+    })
+
+
+# ─── SINGLE MESSAGE DETAIL with comments ───────────────────────────
+@login_required(login_url='login')
+def daily_message_detail(request, pk):
+    msg      = get_object_or_404(DailyMessage, pk=pk)
+    comments = msg.comments.all().order_by('-created_at')
+
+    from .models import MessageReaction
+
+    try:
+        user_reaction = MessageReaction.objects.get(
+            daily_message=msg, user=request.user
+        ).emoji
+    except MessageReaction.DoesNotExist:
+        user_reaction = None
+
+    if request.method == 'POST':
+        text = request.POST.get('text', '').strip()
+        if text:
+            DailyMessageComment.objects.create(
+                daily_message=msg,
+                user=request.user,
+                text=text,
+            )
+            return redirect('daily_message_detail', pk=pk)
+
+    reaction_emojis = ['❤️', '🙏', '✨', '😢', '🔥']
+    reaction_counts = {
+        emoji: msg.reactions.filter(emoji=emoji).count()
+        for emoji in reaction_emojis
+    }
+
+    return render(request, 'core/daily_message_detail.html', {
+        'msg':             msg,
+        'comments':        comments,
+        'user_reaction':   user_reaction,
+        'reaction_counts': reaction_counts,
+        'reaction_emojis': reaction_emojis,
+        'total_reactions': msg.reactions.count(),
+        'total_comments':  comments.count(),
+    })
+
+
+# ─── REACT TO MESSAGE (AJAX) ────────────────────────────────────────
+@login_required(login_url='login')
+@require_POST
+def react_to_message(request, pk):
+    msg   = get_object_or_404(DailyMessage, pk=pk)
+    data  = json.loads(request.body)
+    emoji = data.get('emoji')
+
+    valid_emojis = ['❤️', '🙏', '✨', '😢', '🔥']
+    if emoji not in valid_emojis:
+        return JsonResponse({'error': 'Invalid emoji'}, status=400)
+
+    from .models import MessageReaction
+
+    existing = MessageReaction.objects.filter(
+        daily_message=msg, user=request.user
+    ).first()
+
+    if existing:
+        if existing.emoji == emoji:
+            existing.delete()
+            user_reaction = None
+        else:
+            existing.emoji = emoji
+            existing.save()
+            user_reaction = emoji
+    else:
+        MessageReaction.objects.create(
+            daily_message=msg, user=request.user, emoji=emoji
+        )
+        user_reaction = emoji
+
+    reaction_counts = {
+        e: msg.reactions.filter(emoji=e).count()
+        for e in valid_emojis
+    }
+
+    return JsonResponse({
+        'user_reaction':   user_reaction,
+        'reaction_counts': reaction_counts,
+        'total_reactions': msg.reactions.count(),
+    })

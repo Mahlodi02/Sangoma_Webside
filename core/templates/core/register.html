@@ -15,23 +15,130 @@
   <div class="container">
     <div class="form-page-wrap reveal">
       <div class="form-page-card">
+
         <div class="form-page-header">
           <div class="form-page-icon">🌿</div>
           <h2>Begin Your Journey</h2>
-          <p>Create your account to access the full sacred experience.</p>
+          <p>Fill in your details to create your sacred account.</p>
         </div>
-        {% if message %}<div class="form-feedback feedback-error">{{ message }}</div>{% endif %}
-        <form method="POST" class="contact-form">
-          {% csrf_token %}
-          <div class="form-group"><label>Username</label>{{ form.username }}</div>
-          <div class="form-group"><label>Email Address</label>{{ form.email }}</div>
-          <div class="form-group"><label>Password</label>{{ form.password1 }}</div>
-          <div class="form-group"><label>Confirm Password</label>{{ form.password2 }}</div>
-          <button type="submit" class="btn-primary" style="width:100%;padding:14px;margin-top:8px;">Create Account →</button>
-        </form>
-        <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:20px;">
-          Already a member? <a href="{% url 'login' %}" style="color:var(--gold);text-decoration:none;">Sign in</a>
-        </p>
+
+        {% if messages %}
+          {% for message in messages %}
+            <div style="
+              background:rgba(0,180,100,0.1);
+              border:0.5px solid rgba(0,200,100,0.3);
+              color:#7fe8b0;
+              padding:16px 20px;
+              border-radius:10px;
+              text-align:center;
+              font-size:15px;
+              margin-bottom:24px;
+            ">
+              {{ message }}<br>
+              <a href="{% url 'login' %}" style="color:var(--gold);text-decoration:none;font-size:13px;margin-top:6px;display:inline-block;">
+                Click here to sign in →
+              </a>
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        {% if registered %}
+          <!-- SUCCESS MESSAGE -->
+          <div style="
+            background:rgba(0,180,100,0.1);
+            border:0.5px solid rgba(0,200,100,0.3);
+            color:#7fe8b0;
+            padding:16px 20px;
+            border-radius:10px;
+            text-align:center;
+            font-size:15px;
+            margin-bottom:24px;
+          ">
+            ✅ Account created successfully! Welcome, {{ registered_name }}.<br>
+            <a href="{% url 'login' %}" style="color:var(--gold);text-decoration:none;font-size:13px;margin-top:6px;display:inline-block;">
+              Click here to sign in →
+            </a>
+          </div>
+        {% else %}
+
+          {% if form.errors %}
+            <div style="
+              background:rgba(220,50,50,0.1);
+              border:0.5px solid rgba(220,50,50,0.3);
+              color:#f09090;
+              padding:14px 18px;
+              border-radius:10px;
+              font-size:13px;
+              margin-bottom:20px;
+            ">
+              {% for field in form %}
+                {% for error in field.errors %}
+                  <p style="margin:4px 0;">⚠️ <strong>{{ field.label }}:</strong> {{ error }}</p>
+                {% endfor %}
+              {% endfor %}
+              {% for error in form.non_field_errors %}
+                <p style="margin:4px 0;">⚠️ {{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <form method="POST" class="contact-form" novalidate>
+            {% csrf_token %}
+            <div class="form-row">
+              <div class="form-group">
+                <label>First Name</label>
+                <input type="text" name="first_name"
+                       value="{{ form.first_name.value|default:'' }}"
+                       placeholder="Your first name" required>
+              </div>
+              <div class="form-group">
+                <label>Surname</label>
+                <input type="text" name="last_name"
+                       value="{{ form.last_name.value|default:'' }}"
+                       placeholder="Your surname">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Username</label>
+              <input type="text" name="username"
+                     value="{{ form.username.value|default:'' }}"
+                     placeholder="Choose a username" required>
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" name="email"
+                     value="{{ form.email.value|default:'' }}"
+                     placeholder="your@email.com" required>
+            </div>
+            <div class="form-group">
+              <label>Phone (WhatsApp)</label>
+              <input type="text" name="phone"
+                     value="{{ form.phone.value|default:'' }}"
+                     placeholder="eg. +27 600 000 000">
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" name="password1"
+                     placeholder="At least 8 characters" required>
+            </div>
+            <div class="form-group">
+              <label>Confirm Password</label>
+              <input type="password" name="password2"
+                     placeholder="Repeat your password" required>
+            </div>
+            <button type="submit" class="btn-primary"
+                    style="width:100%;padding:16px;margin-top:12px;">
+              Create Account →
+            </button>
+          </form>
+
+          <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:20px;">
+            Already a member?
+            <a href="{% url 'login' %}" style="color:var(--gold);text-decoration:none;">Sign in here</a>
+          </p>
+
+        {% endif %}
+
       </div>
     </div>
   </div>
