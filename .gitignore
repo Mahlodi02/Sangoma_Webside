@@ -19,3 +19,5 @@ Thumbs.db
 
 # static files
 staticfiles/db.sqlite3
+
+staticfiles/
