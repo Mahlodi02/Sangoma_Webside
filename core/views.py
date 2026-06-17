@@ -5,12 +5,11 @@
 # =====================================================
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from .models import Service, Review, DailyMessage, DailyMessageComment
-from .forms import BookingForm, ReviewForm, ContactForm, RegisterForm
+from .forms import BookingForm, ReviewForm, ContactForm, RegisterForm, EmailAuthenticationForm, DailyMessageCommentForm
 from django.db import IntegrityError
 import json
 from django.contrib import messages
@@ -22,11 +21,28 @@ def home(request):
     reviews       = Review.objects.all().order_by('-created_at')
     latest_msg    = DailyMessage.objects.filter(active=True).first()
     daily_message = latest_msg.text if latest_msg else "The ancestors are preparing today's message. Check back soon. ✦"
+    daily_message_comments = []
+    comment_form = None
+    if request.user.is_authenticated and latest_msg:
+        if request.method == 'POST':
+            comment_form = DailyMessageCommentForm(request.POST)
+            if comment_form.is_valid():
+                comment = comment_form.save(commit=False)
+                comment.daily_message = latest_msg
+                comment.user = request.user
+                comment.save()
+                messages.success(request, '✅ Your encouragement has been posted.')
+                return redirect('home')
+        else:
+            comment_form = DailyMessageCommentForm()
+        daily_message_comments = latest_msg.comments.all().order_by('-created_at')
     return render(request, 'core/home.html', {
         'services':      services,
         'reviews':       reviews,
         'daily_message': daily_message,
         'latest_msg':    latest_msg,
+        'daily_message_comments': daily_message_comments,
+        'comment_form': comment_form,
     })
 
 
@@ -109,16 +125,15 @@ def register(request):
 def user_login(request):
     message = ''
     if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
+        form = EmailAuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
             return redirect('home')
         else:
-            # Show exactly what is wrong
-            message = '❌ Invalid username or password. Note: login uses your USERNAME not your email.'
+            message = '❌ Invalid login. Use your email or username and password.'
     else:
-        form = AuthenticationForm()
+        form = EmailAuthenticationForm(request)
     return render(request, 'core/login.html', {'form': form, 'message': message})
 
 # ─── LOGOUT ────────────────────────────────────────────────────────
@@ -136,6 +151,7 @@ def daily_messages_feed(request):
     from .models import MessageReaction
 
     messages_list = DailyMessage.objects.filter(active=True)
+    reaction_emojis = ['❤️', '🙏', '✨', '😢', '🔥']
     for msg in messages_list:
         try:
             msg.user_reaction = MessageReaction.objects.get(
@@ -143,8 +159,13 @@ def daily_messages_feed(request):
             ).emoji
         except MessageReaction.DoesNotExist:
             msg.user_reaction = None
-        msg.comment_count   = msg.comments.count()
-        msg.reaction_count  = msg.reactions.count()
+        msg.comment_count  = msg.comments.count()
+        msg.total_reactions = msg.reactions.count()
+        msg.emoji_counts = {
+            emoji: msg.reactions.filter(emoji=emoji).count()
+            for emoji in reaction_emojis
+        }
+        msg.share_count = msg.shares.count() if hasattr(msg, 'shares') else 0
     return render(request, 'core/daily_messages_feed.html', {
         'messages_list': messages_list,
     })
@@ -181,6 +202,8 @@ def daily_message_detail(request, pk):
         for emoji in reaction_emojis
     }
 
+    share_count = msg.shares.count() if hasattr(msg, 'shares') else 0
+
     return render(request, 'core/daily_message_detail.html', {
         'msg':             msg,
         'comments':        comments,
@@ -189,6 +212,7 @@ def daily_message_detail(request, pk):
         'reaction_emojis': reaction_emojis,
         'total_reactions': msg.reactions.count(),
         'total_comments':  comments.count(),
+        'share_count':     share_count,
     })
 
 
@@ -234,3 +258,18 @@ def react_to_message(request, pk):
         'reaction_counts': reaction_counts,
         'total_reactions': msg.reactions.count(),
     })
+
+
+@login_required(login_url='login')
+@require_POST
+def share_message(request, pk):
+    msg = get_object_or_404(DailyMessage, pk=pk)
+    # Import here to avoid circular import at module level
+    from .models import DailyMessageShare
+
+    share, created = DailyMessageShare.objects.get_or_create(
+        daily_message=msg,
+        user=request.user,
+    )
+    share_count = msg.shares.count()
+    return JsonResponse({'share_count': share_count, 'created': created})

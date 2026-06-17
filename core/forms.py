@@ -6,7 +6,8 @@
 
 from django import forms
 from .models import Booking, Review, DailyMessageComment
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import User
 import datetime
 
@@ -42,6 +43,33 @@ class RegisterForm(UserCreationForm):
                 # If accounts app isn't available for some reason, ignore and continue
                 pass
         return user
+
+
+class EmailAuthenticationForm(AuthenticationForm):
+    username = forms.CharField(
+        label='Email or Username',
+        widget=forms.TextInput(attrs={
+            'autofocus': True,
+            'placeholder': 'Email or username',
+        })
+    )
+
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        if username and password:
+            user_model = get_user_model()
+            if '@' in username:
+                try:
+                    user = user_model.objects.get(email__iexact=username)
+                    username = user.get_username()
+                except user_model.DoesNotExist:
+                    pass
+            self.user_cache = authenticate(self.request, username=username, password=password)
+            if self.user_cache is None:
+                raise self.get_invalid_login_error()
+            self.confirm_login_allowed(self.user_cache)
+        return self.cleaned_data
 
 
 class BookingForm(forms.ModelForm):

@@ -1,0 +1,125 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Sacred Messages | Ntatemoholo Seromo{% endblock %}
+
+{% block content %}
+
+<section class="msg-hero">
+  <div class="msg-hero-inner">
+    <div class="msg-eyebrow">✦ Ancestral Wisdom</div>
+    <h1 class="msg-hero-title">Sacred <em>Daily Messages</em></h1>
+    <p class="msg-hero-sub">
+    Receive daily ancestral wisdom, reflect with the community,
+    and save messages that speak to your spirit.
+</p>
+  </div>
+</section>
+
+<section class="msg-feed-section">
+  <div class="daily-blessing">
+
+    <div class="blessing-title">
+        ✦ TODAY'S BLESSING ✦
+    </div>
+
+    <p class="blessing-text">
+        May your ancestors guide your steps,
+        strengthen your spirit,
+        and open the doors meant for you.
+    </p>
+
+</div>
+  <div class="msg-feed-wrap">
+
+    {% for msg in messages_list %}
+    <div class="pcard">
+
+      <div class="pcard-header">
+        <div class="pcard-avatar">
+          <img src="/static/core/images/leapard.jpg" alt="Ntatemoholo Seromo">
+        </div>
+        <div class="pcard-meta">
+          <div class="pcard-author">Ntatemoholo Seromo</div>
+          <div class="pcard-time">
+            {{ msg.created_at|date:"d M Y · H:i" }} ·
+            <span class="pcard-tag">Sacred message</span>
+          </div>
+        </div>
+        <span class="pcard-badge">✦ Daily</span>
+      </div>
+
+      <div class="pcard-body">
+        <p class="pcard-text">{{ msg.text }}</p>
+      </div>
+
+      {% if msg.total_reactions > 0 %}
+      <div class="pcard-summary">
+        <div class="pcard-emoji-row">
+          {% for emoji, count in msg.emoji_counts.items %}
+            {% if count > 0 %}
+              <span class="pcard-pill">{{ emoji }} {{ count }}</span>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <div class="pcard-count-text">
+          {{ msg.total_reactions }} reaction{{ msg.total_reactions|pluralize }}
+          &nbsp;·&nbsp;
+          {{ msg.comment_count }} comment{{ msg.comment_count|pluralize }}
+        </div>
+      </div>
+      {% else %}
+      <div class="pcard-count-only">
+        {{ msg.comment_count }} comment{{ msg.comment_count|pluralize }}
+      </div>
+      {% endif %}
+
+      <div class="pcard-divider"></div>
+
+      <div class="pcard-actions">
+        <a href="{% url 'daily_message_detail' msg.pk %}" class="pcard-btn {% if msg.user_reaction %}pcard-btn-active{% endif %}">
+          <span class="pcard-btn-icon">{% if msg.user_reaction %}{{ msg.user_reaction }}{% else %}❤️{% endif %}</span>
+          <span class="pcard-btn-label">{% if msg.user_reaction %}Reacted{% else %}React{% endif %}</span>
+        </a>
+        <a href="{% url 'daily_message_detail' msg.pk %}" class="pcard-btn">
+          <span class="pcard-btn-icon">💬</span>
+          <span class="pcard-btn-label">Reflect</span>
+        </a>
+        <button class="pcard-btn" onclick="sharePost('{{ msg.pk }}')">
+          <span class="pcard-btn-icon">🔗</span>
+          <span class="pcard-btn-label">Share Wisdom</span>
+        </button>
+      </div>
+
+      <div class="pcard-toast" id="toast-{{ msg.pk }}">
+        ✅ Link copied — share with someone who needs this today.
+      </div>
+
+    </div>
+    {% empty %}
+    <div class="msg-empty">
+      <div class="msg-empty-icon">🌿</div>
+      <p>No sacred messages yet.</p>
+      <p class="msg-empty-sub">The ancestors are preparing their words. Check back soon.</p>
+    </div>
+    {% endfor %}
+
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function sharePost(pk) {
+  const url = window.location.origin + '/messages/' + pk + '/';
+  navigator.clipboard.writeText(url).then(() => {
+    const t = document.getElementById('toast-' + pk);
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+    fetch('/messages/' + pk + '/share/', {
+      method: 'POST',
+      headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+    }).catch(() => {});
+  }).catch(() => alert('Copy: ' + url));
+}
+</script>
+{% endblock %}

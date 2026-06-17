@@ -33,9 +33,19 @@ html {
   scroll-behavior: smooth;
 }
 
+.daily-blessing {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.45rem;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--text);
+  line-height: 1.6;
+}
+
 body {
   font-family: 'Raleway', sans-serif;
   color: var(--text);
+  text-align: center;
   background: var(--deep);
   overflow-x: hidden;
 }

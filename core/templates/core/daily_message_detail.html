@@ -1,0 +1,211 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Sacred Message | Ntatemoholo Seromo{% endblock %}
+
+{% block content %}
+
+<section class="msg-feed-section" style="padding-top:40px;">
+  <div class="msg-feed-wrap">
+
+    <div class="pcard">
+
+      <div class="pcard-header">
+        <div class="pcard-avatar">
+          <img src="/static/core/images/leapard.jpg" alt="Ntatemoholo Seromo">
+        </div>
+        <div class="pcard-meta">
+          <div class="pcard-author">Ntatemoholo Seromo</div>
+          <div class="pcard-time">
+            {{ msg.created_at|date:"d M Y · H:i" }} ·
+            <span class="pcard-tag">Sacred message</span>
+          </div>
+        </div>
+        <span class="pcard-badge">✦ Daily</span>
+      </div>
+
+      <div class="pcard-label">✦ Today's Ancestral Wisdom</div>
+
+      <div class="pcard-body">
+        <p class="pcard-text pcard-text-lg">{{ msg.text }}</p>
+      </div>
+
+      <div class="pcard-emoji-row" id="emojiRow" style="padding:4px 18px 10px;">
+        {% for emoji, count in reaction_counts.items %}
+          {% if count > 0 %}
+            <span class="pcard-pill">{{ emoji }} {{ count }}</span>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="pcard-count-only" id="reactionSummary">
+        <span id="totalReactionsNum">{{ total_reactions }}</span> reaction{{ total_reactions|pluralize }}
+        &nbsp;·&nbsp;
+        {{ total_comments }} comment{{ total_comments|pluralize }}
+      </div>
+
+      <div class="pcard-divider"></div>
+
+      <div style="position:relative;">
+        <div class="pcard-picker" id="emojiPicker">
+          {% for emoji in reaction_emojis %}
+          <button class="pcard-picker-btn {% if user_reaction == emoji %}picked{% endif %}"
+                  data-emoji="{{ emoji }}"
+                  data-pk="{{ msg.pk }}"
+                  onclick="handleReact(this)">{{ emoji }}</button>
+          {% endfor %}
+        </div>
+
+        <div class="pcard-actions">
+          <button class="pcard-btn {% if user_reaction %}pcard-btn-active{% endif %}"
+                  id="reactMainBtn" onclick="togglePicker()">
+            <span class="pcard-btn-icon" id="reactIcon">{% if user_reaction %}{{ user_reaction }}{% else %}❤️{% endif %}</span>
+            <span class="pcard-btn-label" id="reactLabel">{% if user_reaction %}Reacted{% else %}React{% endif %}</span>
+          </button>
+          <button class="pcard-btn" onclick="focusComment()">
+            <span class="pcard-btn-icon">💬</span>
+            <span class="pcard-btn-label">Reflect</span>
+          </button>
+          <button class="pcard-btn">
+            <span class="pcard-btn-icon">📖</span>
+            <span class="pcard-btn-label">
+              Save
+            </span>
+          </button>
+          <button class="pcard-btn" onclick="shareThisPost()">
+            <span class="pcard-btn-icon">🔗</span>
+            <span class="pcard-btn-label">Share Wisdom</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="pcard-toast" id="shareToast">
+        ✅ Link copied — share with someone who needs this today.
+      </div>
+
+      <div class="pcard-divider"></div>
+
+      <div class="pcard-comments">
+        <div class="pcard-comments-title">
+          🌿 Community Reflections <span class="pcard-comments-count">({{ total_comments }})</span>
+        </div>
+
+        <form method="POST" class="pcard-comment-form">
+          {% csrf_token %}
+          <div class="pcard-comment-row">
+            <div class="pcard-comment-av">{{ request.user.username|slice:":1"|upper }}</div>
+            <div class="pcard-comment-input-wrap">
+              <textarea id="commentInput" name="text"
+                        placeholder="Share how this message touched your spirit..."
+                        rows="2" required></textarea>
+              <button type="submit" class="pcard-comment-submit">Post ✦</button>
+            </div>
+          </div>
+        </form>
+
+        <div class="pcard-comments-list">
+          {% for comment in comments %}
+          <div class="pcard-comment-item">
+            <div class="pcard-comment-av">{{ comment.user.username|slice:":1"|upper }}</div>
+            <div class="pcard-comment-bubble">
+              <div class="pcard-comment-name">
+                {{ comment.user.username|default:"Anonymous" }}
+                <span class="pcard-comment-time">· {{ comment.created_at|date:"d M Y H:i" }}</span>
+              </div>
+              <p class="pcard-comment-text">{{ comment.text }}</p>
+            </div>
+          </div>
+          {% empty %}
+          <div class="pcard-no-comments">
+            Be the first to share how this message touched you. ✦
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+
+    <div style="text-align:center;padding:16px 0 32px;">
+      <a href="{% url 'daily_messages_feed' %}" class="pcard-back-link">← Back to All Messages</a>
+    </div>
+
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const CSRF = '{{ csrf_token }}';
+let pickerOpen = false;
+
+function togglePicker() {
+  pickerOpen = !pickerOpen;
+  document.getElementById('emojiPicker').classList.toggle('open', pickerOpen);
+}
+
+function handleReact(btn) {
+  const emoji = btn.dataset.emoji;
+  const pk    = btn.dataset.pk;
+
+  fetch('/messages/' + pk + '/react/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
+    body: JSON.stringify({ emoji }),
+  })
+  .then(r => r.json())
+  .then(data => {
+    document.querySelectorAll('.pcard-picker-btn').forEach(b => {
+      b.classList.toggle('picked', b.dataset.emoji === data.user_reaction);
+    });
+    const icon    = document.getElementById('reactIcon');
+    const label   = document.getElementById('reactLabel');
+    const mainBtn = document.getElementById('reactMainBtn');
+    if (data.user_reaction) {
+      icon.textContent  = data.user_reaction;
+      label.textContent = 'Reacted';
+      mainBtn.classList.add('pcard-btn-active');
+    } else {
+      icon.textContent  = '❤️';
+      label.textContent = 'React';
+      mainBtn.classList.remove('pcard-btn-active');
+    }
+    document.getElementById('totalReactionsNum').textContent = data.total_reactions;
+    const row = document.getElementById('emojiRow');
+    row.innerHTML = '';
+    for (const [em, cnt] of Object.entries(data.reaction_counts)) {
+      if (cnt > 0) {
+        const s = document.createElement('span');
+        s.className = 'pcard-pill';
+        s.textContent = em + ' ' + cnt;
+        row.appendChild(s);
+      }
+    }
+    pickerOpen = false;
+    document.getElementById('emojiPicker').classList.remove('open');
+  });
+}
+
+function focusComment() {
+  const el = document.getElementById('commentInput');
+  el.focus();
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function shareThisPost() {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    const t = document.getElementById('shareToast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+    fetch('/messages/{{ msg.pk }}/share/', {
+      method: 'POST', headers: { 'X-CSRFToken': CSRF }
+    }).catch(() => {});
+  }).catch(() => alert('Copy: ' + window.location.href));
+}
+
+document.addEventListener('click', e => {
+  if (pickerOpen && !e.target.closest('#emojiPicker') && !e.target.closest('#reactMainBtn')) {
+    pickerOpen = false;
+    document.getElementById('emojiPicker').classList.remove('open');
+  }
+});
+</script>
+{% endblock %}
